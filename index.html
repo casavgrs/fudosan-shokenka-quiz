@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>不動産証券化マスター 一問一答</title>
+<style>
+:root {
+  --c102: #2563EB; --c103: #16A34A; --c104u: #D97706; --c104d: #7C3AED; --c106: #0891B2;
+  --bg: #F8FAFC; --card: #FFFFFF; --text: #1E293B; --sub: #64748B;
+  --border: #E2E8F0; --radius: 16px; --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', sans-serif;
+       background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── Layout ── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+.header { padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--border);
+          display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 10; }
+.header h1 { font-size: 17px; font-weight: 700; }
+.back-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--sub);
+            padding: 4px 8px 4px 0; }
+.content { flex: 1; padding: 20px; max-width: 640px; margin: 0 auto; width: 100%; }
+
+/* ── Home ── */
+.app-title { text-align: center; padding: 32px 0 24px; }
+.app-title h1 { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.4; }
+.app-title p { color: var(--sub); font-size: 14px; margin-top: 6px; }
+.stats-bar { display: flex; gap: 12px; margin-bottom: 24px; }
+.stat-card { flex: 1; background: var(--card); border-radius: 12px; padding: 14px;
+             text-align: center; border: 1px solid var(--border); }
+.stat-card .num { font-size: 24px; font-weight: 800; }
+.stat-card .lbl { font-size: 11px; color: var(--sub); margin-top: 2px; }
+.section-title { font-size: 13px; font-weight: 700; color: var(--sub); letter-spacing: .05em;
+                 text-transform: uppercase; margin: 0 0 10px; }
+.mode-buttons { display: flex; gap: 10px; margin-bottom: 24px; }
+.mode-btn { flex: 1; padding: 12px 8px; border-radius: 12px; border: 1.5px solid var(--border);
+            background: var(--card); font-size: 13px; font-weight: 600; cursor: pointer;
+            text-align: center; transition: all .15s; }
+.mode-btn:hover { border-color: #6366F1; color: #6366F1; }
+.mode-btn.wrong { border-color: #EF4444; color: #EF4444; }
+.mode-btn.bookmark { border-color: #F59E0B; color: #F59E0B; }
+.subject-grid { display: flex; flex-direction: column; gap: 12px; }
+.subject-card { background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
+                padding: 18px 18px 18px 20px; cursor: pointer; transition: all .15s;
+                display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; }
+.subject-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+                        width: 5px; background: var(--color); }
+.subject-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.subject-card .info { flex: 1; }
+.subject-card .sname { font-size: 15px; font-weight: 700; }
+.subject-card .smeta { font-size: 12px; color: var(--sub); margin-top: 3px; }
+.subject-card .sacc { font-size: 13px; font-weight: 700; }
+.subject-card .arrow { color: var(--sub); font-size: 18px; }
+.progress-ring { width: 44px; height: 44px; flex-shrink: 0; }
+
+/* ── Section list ── */
+.section-list { display: flex; flex-direction: column; gap: 10px; }
+.section-item { background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+                padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px;
+                transition: all .15s; }
+.section-item:hover { box-shadow: var(--shadow); }
+.section-item .si-info { flex: 1; }
+.section-item .si-title { font-size: 14px; font-weight: 600; line-height: 1.4; }
+.section-item .si-meta { font-size: 12px; color: var(--sub); margin-top: 3px; }
+.section-item .si-acc { font-size: 13px; font-weight: 700; padding: 4px 10px;
+                        border-radius: 20px; background: #F1F5F9; }
+.study-modes { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.study-mode-btn { padding: 9px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+                  background: var(--card); font-size: 13px; font-weight: 600; cursor: pointer;
+                  transition: all .15s; }
+.study-mode-btn.active { background: var(--subject-color, #6366F1); color: white; border-color: transparent; }
+.study-mode-btn:hover:not(.active) { border-color: #6366F1; }
+
+/* ── Study screen ── */
+.study-header { padding: 12px 20px; background: var(--card); border-bottom: 1px solid var(--border);
+                position: sticky; top: 0; z-index: 10; }
+.progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.progress-info span { font-size: 13px; color: var(--sub); font-weight: 600; }
+.progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--subject-color, #6366F1);
+                     border-radius: 2px; transition: width .3s; }
+.study-content { padding: 20px; max-width: 640px; margin: 0 auto; width: 100%; }
+.question-card { background: var(--card); border-radius: var(--radius); padding: 28px 24px;
+                 border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 16px;
+                 min-height: 160px; display: flex; flex-direction: column; justify-content: center; }
+.q-number { font-size: 12px; font-weight: 700; color: var(--subject-color, #6366F1);
+            letter-spacing: .05em; margin-bottom: 12px; }
+.q-text { font-size: 16px; line-height: 1.7; font-weight: 500; }
+.reveal-btn { width: 100%; padding: 16px; background: var(--subject-color, #6366F1);
+              color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
+              cursor: pointer; transition: opacity .15s; margin-bottom: 12px; }
+.reveal-btn:hover { opacity: .9; }
+.answer-section { display: none; }
+.answer-section.visible { display: block; }
+.answer-badge { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
+                border-radius: 30px; font-size: 20px; font-weight: 800; margin-bottom: 14px; }
+.answer-badge.correct { background: #DCFCE7; color: #16A34A; }
+.answer-badge.wrong { background: #FEE2E2; color: #DC2626; }
+.explanation { background: #F8FAFC; border-radius: 10px; padding: 14px 16px;
+               font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 14px; border-left: 3px solid var(--border); }
+.note-link { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #6366F1;
+             text-decoration: none; margin-bottom: 16px; font-weight: 600; }
+.note-link:hover { text-decoration: underline; }
+.judge-area { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.judge-btn { padding: 18px; border: 2px solid; border-radius: 14px; font-size: 22px;
+             font-weight: 800; cursor: pointer; background: white; transition: all .15s;
+             display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.judge-btn span { font-size: 12px; font-weight: 600; }
+.judge-btn.correct-btn { border-color: #16A34A; color: #16A34A; }
+.judge-btn.correct-btn:hover { background: #DCFCE7; }
+.judge-btn.wrong-btn { border-color: #DC2626; color: #DC2626; }
+.judge-btn.wrong-btn:hover { background: #FEE2E2; }
+.secondary-actions { display: flex; gap: 10px; }
+.bookmark-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border);
+                background: white; font-size: 14px; font-weight: 600; cursor: pointer;
+                transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.bookmark-btn.bookmarked { background: #FEF3C7; border-color: #F59E0B; color: #B45309; }
+.skip-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1.5px solid var(--border);
+            background: white; font-size: 14px; font-weight: 600; cursor: pointer;
+            color: var(--sub); transition: all .15s; }
+.skip-btn:hover { border-color: var(--sub); }
+
+/* ── Results ── */
+.results-content { padding: 32px 20px; text-align: center; }
+.results-emoji { font-size: 60px; margin-bottom: 16px; }
+.results-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+.results-sub { color: var(--sub); font-size: 15px; margin-bottom: 32px; }
+.results-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 32px; }
+.rs-card { background: var(--card); border-radius: 12px; padding: 16px 10px;
+           border: 1px solid var(--border); }
+.rs-card .num { font-size: 26px; font-weight: 800; }
+.rs-card .lbl { font-size: 11px; color: var(--sub); margin-top: 4px; }
+.rs-card.c { color: #16A34A; } .rs-card.w { color: #DC2626; }
+.result-actions { display: flex; flex-direction: column; gap: 12px; }
+.result-btn { padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 700;
+              cursor: pointer; border: none; transition: opacity .15s; }
+.result-btn:hover { opacity: .9; }
+.result-btn.primary { background: var(--subject-color, #6366F1); color: white; }
+.result-btn.secondary { background: var(--card); border: 1.5px solid var(--border); color: var(--text); }
+
+/* ── Empty state ── */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--sub); }
+.empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+.empty-state p { font-size: 15px; }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+         background: #1E293B; color: white; padding: 12px 20px; border-radius: 24px;
+         font-size: 14px; font-weight: 600; transition: transform .3s; z-index: 100; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ───── HOME ───── -->
+<div id="home" class="screen active">
+  <div class="content">
+    <div class="app-title">
+      <h1>不動産証券化マスター<br>一問一答</h1>
+      <p>科目別・セクション別に効率よく学習</p>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-card"><div class="num" id="home-total">—</div><div class="lbl">総問題数</div></div>
+      <div class="stat-card"><div class="num" id="home-done">—</div><div class="lbl">回答済み</div></div>
+      <div class="stat-card"><div class="num" id="home-acc">—</div><div class="lbl">正答率</div></div>
+    </div>
+    <div class="mode-buttons">
+      <button class="mode-btn" onclick="startAll()">🎯 全問題</button>
+      <button class="mode-btn wrong" onclick="startWrong()">❌ 間違えた問題</button>
+      <button class="mode-btn bookmark" onclick="startBookmarked()">🔖 ブックマーク</button>
+    </div>
+    <div class="section-title">科目を選択</div>
+    <div id="subject-grid" class="subject-grid"></div>
+  </div>
+</div>
+
+<!-- ───── SECTION LIST ───── -->
+<div id="section-screen" class="screen">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">‹</button>
+    <h1 id="section-header-title">—</h1>
+  </div>
+  <div class="content">
+    <div class="study-modes" id="section-modes"></div>
+    <div class="section-title">セクション</div>
+    <div id="section-list" class="section-list"></div>
+  </div>
+</div>
+
+<!-- ───── STUDY ───── -->
+<div id="study-screen" class="screen">
+  <div class="study-header">
+    <div class="progress-info">
+      <button class="back-btn" style="padding:0" onclick="exitStudy()">‹ 戻る</button>
+      <span id="study-progress-label">1 / 10</span>
+      <span id="study-score-label" style="color:#16A34A">○ 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="study-content">
+    <div class="question-card">
+      <div class="q-number" id="q-number">Q1</div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+    <button class="reveal-btn" id="reveal-btn" onclick="revealAnswer()">答えを見る</button>
+    <div class="answer-section" id="answer-section">
+      <div id="answer-badge" class="answer-badge"></div>
+      <div id="explanation" class="explanation" style="display:none"></div>
+      <a id="note-link" class="note-link" href="#" target="_blank" rel="noopener">
+        📝 noteで詳しく読む ↗
+      </a>
+      <div class="judge-area">
+        <button class="judge-btn correct-btn" onclick="judge(true)">○<span>正解</span></button>
+        <button class="judge-btn wrong-btn" onclick="judge(false)">×<span>不正解</span></button>
+      </div>
+      <div class="secondary-actions">
+        <button class="bookmark-btn" id="bookmark-btn" onclick="toggleBookmark()">🔖 ブックマーク</button>
+        <button class="skip-btn" onclick="nextQuestion()">スキップ →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ───── RESULTS ───── -->
+<div id="results-screen" class="screen">
+  <div class="header"><button class="back-btn" onclick="goHome()">‹</button><h1>セッション完了</h1></div>
+  <div class="results-content">
+    <div class="results-emoji" id="result-emoji">🎉</div>
+    <div class="results-title" id="result-title">お疲れ様でした！</div>
+    <div class="results-sub" id="result-sub"></div>
+    <div class="results-stats">
+      <div class="rs-card"><div class="num" id="r-total">0</div><div class="lbl">問</div></div>
+      <div class="rs-card c"><div class="num" id="r-correct">0</div><div class="lbl">正解</div></div>
+      <div class="rs-card w"><div class="num" id="r-wrong">0</div><div class="lbl">不正解</div></div>
+    </div>
+    <div class="result-actions">
+      <button class="result-btn primary" id="retry-wrong-btn" onclick="retryWrong()">❌ 間違えた問題を解く</button>
+      <button class="result-btn secondary" onclick="goHome()">🏠 ホームに戻る</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA & STORAGE
+// ══════════════════════════════════════════════
+let APP_DATA = null;
+let PROGRESS = {}; // { qId: { correct, incorrect, bookmarked } }
+
+function loadProgress() {
+  try { PROGRESS = JSON.parse(localStorage.getItem('smProgress') || '{}'); } catch { PROGRESS = {}; }
+}
+function saveProgress() {
+  localStorage.setItem('smProgress', JSON.stringify(PROGRESS));
+}
+function getP(id) {
+  if (!PROGRESS[id]) PROGRESS[id] = { correct: 0, incorrect: 0, bookmarked: false };
+  return PROGRESS[id];
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+async function init() {
+  loadProgress();
+  try {
+    const r = await fetch('data.json');
+    APP_DATA = await r.json();
+  } catch {
+    // Fallback: embedded data (for file:// access)
+    APP_DATA = window.EMBEDDED_DATA || { subjects: [] };
+  }
+  renderHome();
+}
+
+// ══════════════════════════════════════════════
+//  HOME
+// ══════════════════════════════════════════════
+function allQuestions() {
+  return APP_DATA.subjects.flatMap(s => s.sections.flatMap(sec => sec.questions));
+}
+
+function renderHome() {
+  const all = allQuestions();
+  const done = all.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
+  const correct = all.filter(q => { const p = PROGRESS[q.id]; return p && p.correct > 0; });
+  document.getElementById('home-total').textContent = all.length;
+  document.getElementById('home-done').textContent = done.length;
+  document.getElementById('home-acc').textContent = done.length
+    ? Math.round(correct.length / done.length * 100) + '%' : '—';
+
+  const grid = document.getElementById('subject-grid');
+  grid.innerHTML = '';
+  APP_DATA.subjects.forEach(subj => {
+    const qs = subj.sections.flatMap(s => s.questions);
+    const done = qs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
+    const cor = qs.filter(q => { const p = PROGRESS[q.id]; return p && p.correct > 0; });
+    const acc = done.length ? Math.round(cor.length / done.length * 100) : null;
+    const pct = qs.length ? Math.round(done.length / qs.length * 100) : 0;
+
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.style.setProperty('--color', subj.color);
+    card.innerHTML = `
+      <svg class="progress-ring" viewBox="0 0 44 44">
+        <circle cx="22" cy="22" r="18" fill="none" stroke="#E2E8F0" stroke-width="4"/>
+        <circle cx="22" cy="22" r="18" fill="none" stroke="${subj.color}" stroke-width="4"
+          stroke-dasharray="${2*Math.PI*18}" stroke-dashoffset="${2*Math.PI*18*(1-pct/100)}"
+          stroke-linecap="round" transform="rotate(-90 22 22)"/>
+        <text x="22" y="26" text-anchor="middle" font-size="10" font-weight="700" fill="${subj.color}">${pct}%</text>
+      </svg>
+      <div class="info">
+        <div class="sname">${subj.name}</div>
+        <div class="smeta">${subj.sections.length}セクション · ${qs.length}問</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        ${acc !== null ? `<div class="sacc" style="color:${subj.color}">${acc}%正解</div>` : ''}
+        <div class="arrow">›</div>
+      </div>`;
+    card.onclick = () => showSubject(subj.id);
+    grid.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  SUBJECT / SECTION
+// ══════════════════════════════════════════════
+let currentSubject = null;
+let currentMode = 'all'; // all | wrong | bookmark
+
+function showSubject(subjId) {
+  currentSubject = APP_DATA.subjects.find(s => s.id === subjId);
+  currentMode = 'all';
+  document.getElementById('section-header-title').textContent = currentSubject.name;
+  document.documentElement.style.setProperty('--subject-color', currentSubject.color);
+
+  // Mode buttons
+  const modes = document.getElementById('section-modes');
+  modes.innerHTML = `
+    <button class="study-mode-btn active" onclick="setMode('all',this)">📚 全問題</button>
+    <button class="study-mode-btn" onclick="setMode('wrong',this)">❌ 間違えた問題</button>
+    <button class="study-mode-btn" onclick="setMode('bookmark',this)">🔖 ブックマーク</button>
+    <button class="study-mode-btn" onclick="startSubject()">▶ この科目を解く</button>`;
+  modes.querySelectorAll('.study-mode-btn').forEach(b => b.style.setProperty('--subject-color', currentSubject.color));
+
+  renderSections();
+  showScreen('section-screen');
+}
+
+function setMode(mode, btn) {
+  currentMode = mode;
+  document.querySelectorAll('.study-mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSections();
+}
+
+function renderSections() {
+  const list = document.getElementById('section-list');
+  list.innerHTML = '';
+  currentSubject.sections.forEach(sec => {
+    let qs = filterQuestions(sec.questions);
+    if (qs.length === 0 && currentMode !== 'all') {
+      // Show section but grayed out
+      qs = [];
+    }
+    const allQs = sec.questions;
+    const done = allQs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct+p.incorrect)>0; });
+    const cor = allQs.filter(q => { const p = PROGRESS[q.id]; return p && p.correct>0; });
+    const acc = done.length ? Math.round(cor.length/done.length*100) : null;
+    const filtCount = filterQuestions(sec.questions).length;
+
+    const item = document.createElement('div');
+    item.className = 'section-item';
+    if (filtCount === 0) item.style.opacity = '0.4';
+    item.innerHTML = `
+      <div class="si-info">
+        <div class="si-title">${sec.title}</div>
+        <div class="si-meta">${filtCount > 0 ? filtCount : allQs.length}問${currentMode!=='all'?` (全${allQs.length}問中)`:''}</div>
+      </div>
+      ${acc!==null?`<div class="si-acc" style="color:${currentSubject.color}">${acc}%</div>`:''}
+      <div style="color:var(--sub);font-size:18px">›</div>`;
+    if (filtCount > 0) item.onclick = () => startSection(sec.id);
+    list.appendChild(item);
+  });
+}
+
+function filterQuestions(qs) {
+  if (currentMode === 'wrong') return qs.filter(q => { const p = PROGRESS[q.id]; return p && p.incorrect > 0; });
+  if (currentMode === 'bookmark') return qs.filter(q => PROGRESS[q.id]?.bookmarked);
+  return qs;
+}
+
+// ══════════════════════════════════════════════
+//  STUDY SESSION
+// ══════════════════════════════════════════════
+let session = { questions: [], idx: 0, correct: 0, wrong: 0, sectionNoteUrl: '' };
+
+function buildQueue(questions) {
+  // Shuffle
+  return [...questions].sort(() => Math.random() - 0.5);
+}
+
+function startAll() {
+  startSession(allQuestions(), null);
+}
+function startWrong() {
+  const qs = allQuestions().filter(q => PROGRESS[q.id]?.incorrect > 0);
+  if (!qs.length) { showToast('間違えた問題はまだありません'); return; }
+  startSession(qs, null);
+}
+function startBookmarked() {
+  const qs = allQuestions().filter(q => PROGRESS[q.id]?.bookmarked);
+  if (!qs.length) { showToast('ブックマークされた問題はまだありません'); return; }
+  startSession(qs, null);
+}
+function startSubject() {
+  const qs = filterQuestions(currentSubject.sections.flatMap(s => s.questions));
+  if (!qs.length) { showToast('該当する問題がありません'); return; }
+  startSession(qs, null);
+}
+function startSection(secId) {
+  const sec = currentSubject.sections.find(s => s.id === secId);
+  const qs = filterQuestions(sec.questions);
+  if (!qs.length) { showToast('該当する問題がありません'); return; }
+  startSession(qs, sec.note_url);
+}
+
+function startSession(questions, noteUrl) {
+  if (!questions.length) { showToast('問題がありません'); return; }
+  // Find note URL: use section note_url from parent
+  session = {
+    questions: buildQueue(questions),
+    idx: 0, correct: 0, wrong: 0,
+    noteUrl: noteUrl || findNoteUrl(questions[0].id)
+  };
+  if (!document.documentElement.style.getPropertyValue('--subject-color')) {
+    document.documentElement.style.setProperty('--subject-color', '#6366F1');
+  }
+  showScreen('study-screen');
+  renderQuestion();
+}
+
+function findNoteUrl(qId) {
+  for (const subj of APP_DATA.subjects)
+    for (const sec of subj.sections)
+      if (sec.questions.find(q => q.id === qId)) return sec.note_url;
+  return '#';
+}
+
+function renderQuestion() {
+  const q = session.questions[session.idx];
+  if (!q) { showResults(); return; }
+
+  const total = session.questions.length;
+  const pct = Math.round(session.idx / total * 100);
+  document.getElementById('study-progress-label').textContent = `${session.idx+1} / ${total}`;
+  document.getElementById('study-score-label').textContent = `○ ${session.correct}`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('q-number').textContent = `Q${session.idx+1}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  // Reset answer area
+  document.getElementById('reveal-btn').style.display = 'block';
+  document.getElementById('answer-section').classList.remove('visible');
+
+  // Note URL
+  const noteUrl = session.noteUrl || findNoteUrl(q.id);
+  document.getElementById('note-link').href = noteUrl;
+
+  // Bookmark state
+  updateBookmarkBtn(q.id);
+}
+
+function revealAnswer() {
+  const q = session.questions[session.idx];
+  document.getElementById('reveal-btn').style.display = 'none';
+  document.getElementById('answer-section').classList.add('visible');
+
+  // Answer badge
+  const badge = document.getElementById('answer-badge');
+  if (q.a === '○') {
+    badge.className = 'answer-badge correct'; badge.textContent = '○ 正しい';
+  } else if (q.a === '×') {
+    badge.className = 'answer-badge wrong'; badge.textContent = '× 誤り';
+  } else {
+    badge.className = 'answer-badge'; badge.textContent = q.a;
+  }
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  if (q.exp) { expEl.textContent = q.exp; expEl.style.display = 'block'; }
+  else { expEl.style.display = 'none'; }
+}
+
+function judge(isCorrect) {
+  const q = session.questions[session.idx];
+  const p = getP(q.id);
+  if (isCorrect) { p.correct++; session.correct++; }
+  else { p.incorrect++; session.wrong++; }
+  saveProgress();
+  nextQuestion();
+}
+
+function nextQuestion() {
+  session.idx++;
+  if (session.idx >= session.questions.length) showResults();
+  else {
+    // Update note URL for next question
+    session.noteUrl = findNoteUrl(session.questions[session.idx].id);
+    renderQuestion();
+  }
+}
+
+function toggleBookmark() {
+  const q = session.questions[session.idx];
+  const p = getP(q.id);
+  p.bookmarked = !p.bookmarked;
+  saveProgress();
+  updateBookmarkBtn(q.id);
+  showToast(p.bookmarked ? '🔖 ブックマーク追加' : 'ブックマーク解除');
+}
+
+function updateBookmarkBtn(id) {
+  const btn = document.getElementById('bookmark-btn');
+  const bm = PROGRESS[id]?.bookmarked;
+  btn.className = 'bookmark-btn' + (bm ? ' bookmarked' : '');
+  btn.textContent = bm ? '🔖 ブックマーク済み' : '🔖 ブックマーク';
+}
+
+// ══════════════════════════════════════════════
+//  RESULTS
+// ══════════════════════════════════════════════
+function showResults() {
+  const total = session.questions.length;
+  const pct = total ? Math.round(session.correct / total * 100) : 0;
+  document.getElementById('r-total').textContent = total;
+  document.getElementById('r-correct').textContent = session.correct;
+  document.getElementById('r-wrong').textContent = session.wrong;
+  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '💪';
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent =
+    pct >= 80 ? '素晴らしい！' : pct >= 60 ? 'よくできました！' : 'もう一度挑戦しよう！';
+  document.getElementById('result-sub').textContent = `正答率 ${pct}%（${session.correct}/${total}問正解）`;
+  const hasWrong = session.wrong > 0;
+  document.getElementById('retry-wrong-btn').style.display = hasWrong ? 'block' : 'none';
+  showScreen('results-screen');
+  renderHome();
+}
+
+function retryWrong() {
+  const wrongQs = session.questions.filter(q => PROGRESS[q.id]?.incorrect > 0);
+  if (!wrongQs.length) { showToast('間違えた問題がありません'); return; }
+  startSession(wrongQs, null);
+}
+
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goHome() { showScreen('home'); renderHome(); }
+function exitStudy() {
+  if (session.idx > 0 && confirm('学習を中断しますか？')) goHome();
+  else if (session.idx === 0) goHome();
+}
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ══════════════════════════════════════════════
+//  START
+// ══════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
