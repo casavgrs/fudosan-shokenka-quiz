@@ -182,9 +182,10 @@ body.locked #section-screen .back-btn { display: none; }
 .result-feedback.miss { background: #FEE2E2; color: #B91C1C; }
 
 .answer-badge {
-  display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px;
+  display: flex; align-items: center; gap: 8px; padding: 8px 18px;
   border-radius: 30px; font-size: 17px; font-weight: 800; margin-bottom: 14px;
   background: var(--surface); border: 1.5px solid var(--border); color: var(--text);
+  width: fit-content;
 }
 
 .answer-divider {
@@ -367,14 +368,14 @@ body.locked #section-screen .back-btn { display: none; }
       <hr class="answer-divider">
       <div class="answer-label">正解</div>
       <div id="answer-badge" class="answer-badge"></div>
-      <a id="note-link" class="note-link" href="#" target="_blank" rel="noopener">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        noteで詳しく読む
-      </a>
       <div id="explanation-wrap" style="display:none">
         <div class="answer-label" style="margin-top:10px">解説</div>
         <div id="explanation" class="explanation"></div>
       </div>
+      <a id="note-link" class="note-link" href="#" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        noteで詳しく読む
+      </a>
       <div class="secondary-actions">
         <button class="bookmark-btn" id="bookmark-btn" onclick="toggleBookmark()"></button>
         <button class="skip-btn" style="flex:1;margin-top:0" onclick="nextQuestion()">次の問題 →</button>
