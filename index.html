@@ -188,6 +188,11 @@ body.locked #section-screen .back-btn { display: none; }
 .answer-badge.correct { background: #DCFCE7; color: #15803D; }
 .answer-badge.wrong   { background: #FEE2E2; color: #B91C1C; }
 
+.answer-label {
+  font-size: 11px; font-weight: 700; color: var(--sub); letter-spacing: .08em;
+  text-transform: uppercase; margin-bottom: 6px; margin-top: 2px;
+}
+
 .explanation {
   background: var(--surface2); border-radius: var(--radius); padding: 14px 16px;
   font-size: 14px; line-height: 1.8; color: var(--text); margin-bottom: 14px;
@@ -356,8 +361,12 @@ body.locked #section-screen .back-btn { display: none; }
     <button class="skip-btn" id="skip-btn" onclick="skipQuestion()">スキップ →</button>
     <div class="answer-section" id="answer-section">
       <div id="result-feedback" class="result-feedback"></div>
+      <div class="answer-label">正解</div>
       <div id="answer-badge" class="answer-badge"></div>
-      <div id="explanation" class="explanation" style="display:none"></div>
+      <div id="explanation-wrap" style="display:none">
+        <div class="answer-label" style="margin-top:10px">解説</div>
+        <div id="explanation" class="explanation"></div>
+      </div>
       <a id="note-link" class="note-link" href="#" target="_blank" rel="noopener">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         noteで詳しく読む
@@ -689,9 +698,10 @@ function answerQuestion(userAnswer) {
   if (q.a === '○') { badge.className = 'answer-badge correct'; badge.textContent = '○ 正しい'; }
   else             { badge.className = 'answer-badge wrong';   badge.textContent = '× 誤り'; }
 
-  const expEl = document.getElementById('explanation');
-  if (q.exp) { expEl.textContent = q.exp; expEl.style.display = 'block'; }
-  else       { expEl.style.display = 'none'; }
+  const expWrap = document.getElementById('explanation-wrap');
+  const expEl   = document.getElementById('explanation');
+  if (q.exp) { expEl.textContent = q.exp; expWrap.style.display = 'block'; }
+  else       { expWrap.style.display = 'none'; }
 
   document.getElementById('study-score-label').textContent = `○ ${session.correct}`;
   document.getElementById('answer-section').classList.add('visible');
