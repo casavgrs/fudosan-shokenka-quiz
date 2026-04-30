@@ -153,6 +153,26 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
 .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
 .empty-state p { font-size: 15px; }
 
+/* ── List view ── */
+.list-items { display: flex; flex-direction: column; gap: 8px; }
+.list-item { background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+             overflow: hidden; }
+.list-item-header { padding: 14px 16px; cursor: pointer; display: flex; align-items: flex-start;
+                    gap: 10px; }
+.list-item-header:hover { background: #F8FAFC; }
+.list-item-q { flex: 1; font-size: 14px; line-height: 1.6; font-weight: 500; }
+.list-item-arrow { font-size: 16px; color: var(--sub); flex-shrink: 0; transition: transform .2s; }
+.list-item.open .list-item-arrow { transform: rotate(90deg); }
+.list-item-body { display: none; padding: 0 16px 14px; border-top: 1px solid var(--border); }
+.list-item.open .list-item-body { display: block; }
+.list-item-body .answer-badge { margin-top: 12px; font-size: 16px; padding: 8px 16px; }
+.list-item-body .explanation { margin-top: 10px; margin-bottom: 0; }
+
+/* ── Section reset ── */
+.reset-btn { background: none; border: none; font-size: 16px; cursor: pointer; color: var(--sub);
+             padding: 4px 6px; border-radius: 6px; transition: all .15s; flex-shrink: 0; }
+.reset-btn:hover { color: #EF4444; background: #FEF2F2; }
+
 /* ── Toast ── */
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
          background: #1E293B; color: white; padding: 12px 20px; border-radius: 24px;
@@ -167,7 +187,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
   <div class="content">
     <div class="app-title">
       <h1>不動産証券化マスター<br>一問一答</h1>
-      <p>科目別・セクション別に効率よく学習</p>
     </div>
     <div class="stats-bar">
       <div class="stat-card"><div class="num" id="home-total">—</div><div class="lbl">総問題数</div></div>
@@ -176,8 +195,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
     </div>
     <div class="mode-buttons">
       <button class="mode-btn" onclick="startAll()">🎯 全問題</button>
-      <button class="mode-btn wrong" onclick="startWrong()">❌ 間違えた問題</button>
-      <button class="mode-btn bookmark" onclick="startBookmarked()">🔖 ブックマーク</button>
+      <button class="mode-btn wrong" onclick="showList('wrong')">❌ 間違えた問題</button>
+      <button class="mode-btn bookmark" onclick="showList('bookmark')">🔖 ブックマーク</button>
     </div>
     <div class="section-title">科目を選択</div>
     <div id="subject-grid" class="subject-grid"></div>
@@ -251,6 +270,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
   </div>
 </div>
 
+<!-- ───── LIST VIEW ───── -->
+<div id="list-screen" class="screen">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">‹</button>
+    <h1 id="list-title">間違えた問題</h1>
+  </div>
+  <div class="content">
+    <div id="list-summary" style="font-size:13px;color:var(--sub);margin-bottom:16px"></div>
+    <div id="list-items" class="list-items"></div>
+    <div id="list-empty" class="empty-state" style="display:none">
+      <div class="icon">📭</div><p id="list-empty-msg">まだありません</p>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -283,7 +317,14 @@ async function init() {
     // Fallback: embedded data (for file:// access)
     APP_DATA = window.EMBEDDED_DATA || { subjects: [] };
   }
-  renderHome();
+  const HASH_MAP = {'102':'102','103':'103','104u':'104上','104d':'104下','105':'105','106':'106'};
+  const hash = location.hash.replace('#','');
+  const subjId = HASH_MAP[hash] || hash;
+  if (subjId && APP_DATA.subjects.find(s => s.id === subjId)) {
+    showSubject(subjId);
+  } else {
+    renderHome();
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -308,7 +349,7 @@ function renderHome() {
     const qs = subj.sections.flatMap(s => s.questions);
     const done = qs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
     const cor = qs.filter(q => { const p = PROGRESS[q.id]; return p && p.correct > 0; });
-    const acc = done.length ? Math.round(cor.length / done.length * 100) : null;
+    const acc = Math.round(cor.length / qs.length * 100);
     const pct = qs.length ? Math.round(done.length / qs.length * 100) : 0;
 
     const card = document.createElement('div');
@@ -327,7 +368,7 @@ function renderHome() {
         <div class="smeta">${subj.sections.length}セクション · ${qs.length}問</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-        ${acc !== null ? `<div class="sacc" style="color:${subj.color}">${acc}%正解</div>` : ''}
+        <div class="sacc" style="color:${subj.color}">${acc}%正解</div>
         <div class="arrow">›</div>
       </div>`;
     card.onclick = () => showSubject(subj.id);
@@ -379,7 +420,7 @@ function renderSections() {
     const allQs = sec.questions;
     const done = allQs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct+p.incorrect)>0; });
     const cor = allQs.filter(q => { const p = PROGRESS[q.id]; return p && p.correct>0; });
-    const acc = done.length ? Math.round(cor.length/done.length*100) : null;
+    const acc = Math.round(cor.length / allQs.length * 100);
     const filtCount = filterQuestions(sec.questions).length;
 
     const item = document.createElement('div');
@@ -390,7 +431,8 @@ function renderSections() {
         <div class="si-title">${sec.title}</div>
         <div class="si-meta">${filtCount > 0 ? filtCount : allQs.length}問${currentMode!=='all'?` (全${allQs.length}問中)`:''}</div>
       </div>
-      ${acc!==null?`<div class="si-acc" style="color:${currentSubject.color}">${acc}%</div>`:''}
+      <div class="si-acc" style="color:${currentSubject.color}">${acc}%</div>
+      <button class="reset-btn" title="このセクションをリセット" onclick="event.stopPropagation();resetSection('${sec.id}')">⟳</button>
       <div style="color:var(--sub);font-size:18px">›</div>`;
     if (filtCount > 0) item.onclick = () => startSection(sec.id);
     list.appendChild(item);
@@ -584,6 +626,61 @@ function retryWrong() {
   const wrongQs = session.questions.filter(q => PROGRESS[q.id]?.incorrect > 0);
   if (!wrongQs.length) { showToast('間違えた問題がありません'); return; }
   startSession(wrongQs, null);
+}
+
+// ══════════════════════════════════════════════
+//  LIST VIEW (wrong / bookmark)
+// ══════════════════════════════════════════════
+function showList(mode) {
+  const all = allQuestions();
+  let qs, title, emptyMsg;
+  if (mode === 'wrong') {
+    qs = all.filter(q => PROGRESS[q.id]?.incorrect > 0);
+    title = '❌ 間違えた問題'; emptyMsg = '間違えた問題はまだありません';
+  } else {
+    qs = all.filter(q => PROGRESS[q.id]?.bookmarked);
+    title = '🔖 ブックマーク'; emptyMsg = 'ブックマークされた問題はまだありません';
+  }
+  document.getElementById('list-title').textContent = title;
+  const container = document.getElementById('list-items');
+  const empty = document.getElementById('list-empty');
+  document.getElementById('list-empty-msg').textContent = emptyMsg;
+  if (!qs.length) {
+    container.innerHTML = ''; container.style.display = 'none'; empty.style.display = 'block';
+  } else {
+    container.style.display = 'flex'; empty.style.display = 'none';
+    document.getElementById('list-summary').textContent = `${qs.length}問`;
+    container.innerHTML = qs.map(q => {
+      const badge = q.a === '○'
+        ? `<div class="answer-badge correct">○ 正しい</div>`
+        : `<div class="answer-badge wrong">× 誤り</div>`;
+      const exp = q.exp ? `<div class="explanation">${q.exp}</div>` : '';
+      return `<div class="list-item">
+        <div class="list-item-header" onclick="this.closest('.list-item').classList.toggle('open')">
+          <div class="list-item-q">${q.q}</div>
+          <div class="list-item-arrow">›</div>
+        </div>
+        <div class="list-item-body">${badge}${exp}</div>
+      </div>`;
+    }).join('');
+  }
+  showScreen('list-screen');
+}
+
+// ══════════════════════════════════════════════
+//  SECTION RESET
+// ══════════════════════════════════════════════
+function resetSection(secId) {
+  let sec = null;
+  for (const subj of APP_DATA.subjects)
+    for (const s of subj.sections)
+      if (s.id === secId) { sec = s; break; }
+  if (!sec) return;
+  if (!confirm(`「${sec.title}」の進捗をリセットしますか？`)) return;
+  sec.questions.forEach(q => { delete PROGRESS[q.id]; });
+  saveProgress();
+  renderSections();
+  showToast('リセットしました');
 }
 
 // ══════════════════════════════════════════════
