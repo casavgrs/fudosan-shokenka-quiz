@@ -157,10 +157,10 @@ body.locked #section-screen .back-btn { display: none; }
 .judge-btn.answered { pointer-events: none; opacity: 0.25; }
 .judge-btn.answered.selected { opacity: 1; }
 .judge-btn.correct-answer {
-  background: #EFF6FF !important; border-color: #2563EB !important;
-  color: #1D4ED8 !important; opacity: 1 !important;
+  background: #F3F4F6 !important; border-color: #9CA3AF !important;
+  color: #374151 !important; opacity: 1 !important;
 }
-.judge-btn.correct-answer span { color: #3B82F6 !important; }
+.judge-btn.correct-answer span { color: #6B7280 !important; }
 
 .skip-btn {
   width: 100%; padding: 12px; border-radius: var(--radius);
@@ -182,8 +182,13 @@ body.locked #section-screen .back-btn { display: none; }
 .result-feedback.miss { background: #FEE2E2; color: #B91C1C; }
 
 .answer-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 17px; font-weight: 800; margin-bottom: 14px; color: var(--text);
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px;
+  border-radius: 30px; font-size: 17px; font-weight: 800; margin-bottom: 14px;
+  background: var(--surface); border: 1.5px solid var(--border); color: var(--text);
+}
+
+.answer-divider {
+  border: none; border-top: 1px solid var(--border); margin: 14px 0;
 }
 
 .answer-label {
@@ -359,6 +364,7 @@ body.locked #section-screen .back-btn { display: none; }
     <button class="skip-btn" id="skip-btn" onclick="skipQuestion()">スキップ →</button>
     <div class="answer-section" id="answer-section">
       <div id="result-feedback" class="result-feedback"></div>
+      <hr class="answer-divider">
       <div class="answer-label">正解</div>
       <div id="answer-badge" class="answer-badge"></div>
       <div id="explanation-wrap" style="display:none">
