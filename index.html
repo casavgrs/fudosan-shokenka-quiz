@@ -157,10 +157,10 @@ body.locked #section-screen .back-btn { display: none; }
 .judge-btn.answered { pointer-events: none; opacity: 0.25; }
 .judge-btn.answered.selected { opacity: 1; }
 .judge-btn.correct-answer {
-  background: #DCFCE7 !important; border-color: #16A34A !important;
-  color: #15803D !important; opacity: 1 !important;
+  background: #EFF6FF !important; border-color: #2563EB !important;
+  color: #1D4ED8 !important; opacity: 1 !important;
 }
-.judge-btn.correct-answer span { color: #15803D !important; }
+.judge-btn.correct-answer span { color: #3B82F6 !important; }
 
 .skip-btn {
   width: 100%; padding: 12px; border-radius: var(--radius);
@@ -182,11 +182,9 @@ body.locked #section-screen .back-btn { display: none; }
 .result-feedback.miss { background: #FEE2E2; color: #B91C1C; }
 
 .answer-badge {
-  display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px;
-  border-radius: 30px; font-size: 17px; font-weight: 800; margin-bottom: 14px;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 17px; font-weight: 800; margin-bottom: 14px; color: var(--text);
 }
-.answer-badge.correct { background: #DCFCE7; color: #15803D; }
-.answer-badge.wrong   { background: #FEE2E2; color: #B91C1C; }
 
 .answer-label {
   font-size: 11px; font-weight: 700; color: var(--sub); letter-spacing: .08em;
@@ -695,8 +693,8 @@ function answerQuestion(userAnswer) {
   fb.innerHTML = isCorrect ? `${IC.check} 正解！` : `${IC.x} 不正解`;
 
   const badge = document.getElementById('answer-badge');
-  if (q.a === '○') { badge.className = 'answer-badge correct'; badge.textContent = '○ 正しい'; }
-  else             { badge.className = 'answer-badge wrong';   badge.textContent = '× 誤り'; }
+  badge.className = 'answer-badge';
+  badge.textContent = q.a === '○' ? '○ 正しい' : '× 誤り';
 
   const expWrap = document.getElementById('explanation-wrap');
   const expEl   = document.getElementById('explanation');
@@ -794,8 +792,8 @@ function showList(mode) {
     document.getElementById('list-summary').textContent = `${qs.length}問`;
     container.innerHTML = qs.map(q => {
       const badge = q.a === '○'
-        ? `<div class="answer-badge correct">○ 正しい</div>`
-        : `<div class="answer-badge wrong">× 誤り</div>`;
+        ? `<div class="answer-badge">○ 正しい</div>`
+        : `<div class="answer-badge">× 誤り</div>`;
       const exp = q.exp ? `<div class="explanation">${q.exp}</div>` : '';
       return `<div class="list-item">
         <div class="list-item-header" onclick="this.closest('.list-item').classList.toggle('open')">
