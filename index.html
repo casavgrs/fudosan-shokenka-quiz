@@ -6,18 +6,15 @@
 <title>不動産証券化マスター 一問一答</title>
 <style>
 :root {
-  --c102: #5895FF; --c103: #3DD68C; --c104u: #F59E0B; --c104d: #9B8CF6; --c105: #22D3EE; --c106: #FB7185;
-  --bg: #0C0E1A;
-  --surface: #131728;
-  --surface2: #191E30;
-  --border: #1E2442;
-  --text: #DDE3F8;
-  --sub: #5A6288;
-  --accent: #4F8EFF;
-  --green: #3DD68C;
-  --red: #FB7185;
-  --radius: 14px;
-  --shadow: 0 4px 24px rgba(0,0,0,.5);
+  --bg: #F5F5F5;
+  --surface: #FFFFFF;
+  --surface2: #F0F0F0;
+  --border: #E5E5E5;
+  --text: #111111;
+  --sub: #999999;
+  --accent: #111111;
+  --radius: 12px;
+  --shadow: 0 1px 10px rgba(0,0,0,.07);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -34,7 +31,7 @@ body {
   display: flex; align-items: center; gap: 12px;
   position: sticky; top: 0; z-index: 10;
 }
-.header h1 { font-size: 16px; font-weight: 700; color: var(--text); }
+.header h1 { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: .02em; }
 .back-btn {
   background: none; border: none; cursor: pointer; color: var(--sub);
   padding: 4px 8px 4px 0; display: flex; align-items: center;
@@ -45,51 +42,43 @@ body.locked #section-screen .back-btn { display: none; }
 .content { flex: 1; padding: 20px; max-width: 640px; margin: 0 auto; width: 100%; }
 
 /* ── Home ── */
-.app-title { text-align: center; padding: 36px 0 28px; }
-.app-title h1 { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.45; }
-.app-title p { color: var(--sub); font-size: 13px; margin-top: 8px; letter-spacing: .04em; }
-.app-title-divider {
-  width: 36px; height: 2px; background: var(--accent);
-  margin: 16px auto 0; border-radius: 1px;
-}
+.app-title { text-align: center; padding: 40px 0 32px; }
+.app-title h1 { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.5; letter-spacing: .02em; }
+.app-title p { color: var(--sub); font-size: 12px; margin-top: 8px; letter-spacing: .06em; text-transform: uppercase; }
+.app-title-divider { width: 32px; height: 2px; background: var(--text); margin: 16px auto 0; }
 
 .stats-bar { display: flex; gap: 10px; margin-bottom: 24px; }
 .stat-card {
-  flex: 1; background: var(--surface); border-radius: 12px; padding: 14px;
+  flex: 1; background: var(--surface); border-radius: var(--radius); padding: 14px;
   text-align: center; border: 1px solid var(--border);
 }
 .stat-card .num { font-size: 24px; font-weight: 800; color: var(--text); }
-.stat-card .lbl { font-size: 11px; color: var(--sub); margin-top: 3px; }
+.stat-card .lbl { font-size: 11px; color: var(--sub); margin-top: 3px; letter-spacing: .04em; }
 
 .section-title {
-  font-size: 11px; font-weight: 700; color: var(--sub);
-  letter-spacing: .08em; text-transform: uppercase; margin: 0 0 12px;
+  font-size: 10px; font-weight: 700; color: var(--sub);
+  letter-spacing: .1em; text-transform: uppercase; margin: 0 0 12px;
 }
 
 .mode-buttons { display: flex; gap: 8px; margin-bottom: 28px; }
 .mode-btn {
-  flex: 1; padding: 12px 6px; border-radius: 10px;
+  flex: 1; padding: 12px 6px; border-radius: var(--radius);
   border: 1px solid var(--border); background: var(--surface);
   font-size: 12px; font-weight: 600; cursor: pointer;
   text-align: center; transition: all .15s; color: var(--sub);
   display: flex; flex-direction: column; align-items: center; gap: 7px;
 }
-.mode-btn:hover { border-color: var(--accent); color: var(--accent); }
-.mode-btn.wrong:hover { border-color: var(--red); color: var(--red); }
-.mode-btn.bookmark:hover { border-color: #F59E0B; color: #F59E0B; }
+.mode-btn:hover { border-color: var(--text); color: var(--text); background: var(--surface); }
 
-.subject-grid { display: flex; flex-direction: column; gap: 10px; }
+.subject-grid { display: flex; flex-direction: column; gap: 8px; }
 .subject-card {
   background: var(--surface); border-radius: var(--radius);
   border: 1px solid var(--border); cursor: pointer;
-  transition: border-color .15s, box-shadow .15s;
+  transition: box-shadow .15s, border-color .15s;
   display: flex; overflow: hidden;
 }
-.subject-card:hover {
-  border-color: var(--color, var(--accent));
-  box-shadow: 0 0 0 1px var(--color, var(--accent));
-}
-.subject-card-accent { width: 4px; background: var(--color); flex-shrink: 0; }
+.subject-card:hover { border-color: var(--text); box-shadow: var(--shadow); }
+.subject-card-accent { width: 3px; background: var(--text); flex-shrink: 0; }
 .subject-card-body {
   flex: 1; padding: 15px 15px 15px 14px;
   display: flex; align-items: center; gap: 14px;
@@ -97,40 +86,36 @@ body.locked #section-screen .back-btn { display: none; }
 .subject-card .info { flex: 1; min-width: 0; }
 .subject-card .sname { font-size: 13px; font-weight: 700; line-height: 1.45; }
 .subject-card .smeta { font-size: 11px; color: var(--sub); margin-top: 3px; }
-.subject-card .sacc { font-size: 12px; font-weight: 700; white-space: nowrap; }
+.subject-card .sacc { font-size: 12px; font-weight: 700; color: var(--sub); white-space: nowrap; }
 .progress-ring { width: 40px; height: 40px; flex-shrink: 0; }
 
 /* ── Section list ── */
 .section-list { display: flex; flex-direction: column; gap: 8px; }
 .section-item {
-  background: var(--surface); border-radius: 12px;
+  background: var(--surface); border-radius: var(--radius);
   border: 1px solid var(--border); padding: 14px 16px;
   cursor: pointer; display: flex; align-items: center; gap: 12px;
-  transition: border-color .15s;
+  transition: border-color .15s, box-shadow .15s;
 }
-.section-item:hover { border-color: var(--subject-color, var(--accent)); }
+.section-item:hover { border-color: var(--text); box-shadow: var(--shadow); }
 .section-item .si-info { flex: 1; min-width: 0; }
 .section-item .si-title { font-size: 14px; font-weight: 600; line-height: 1.4; }
 .section-item .si-meta { font-size: 12px; color: var(--sub); margin-top: 3px; }
 .section-item .si-acc {
-  font-size: 12px; font-weight: 700; padding: 4px 10px;
-  border-radius: 20px; background: var(--surface2); flex-shrink: 0;
+  font-size: 12px; font-weight: 700; color: var(--sub);
+  padding: 4px 10px; border-radius: 20px; background: var(--surface2); flex-shrink: 0;
 }
 
 .study-modes { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .study-mode-btn {
-  padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border);
-  background: var(--surface); font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all .15s; color: var(--sub);
+  padding: 7px 14px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all .15s; color: var(--sub);
   display: flex; align-items: center; gap: 6px;
 }
-.study-mode-btn.active {
-  background: var(--subject-color, var(--accent));
-  color: #fff; border-color: transparent;
-}
-.study-mode-btn:hover:not(.active) {
-  border-color: var(--subject-color, var(--accent)); color: var(--text);
-}
+.study-mode-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+.study-mode-btn:hover:not(.active) { border-color: var(--text); color: var(--text); }
 
 /* ── Study screen ── */
 .study-header {
@@ -139,98 +124,93 @@ body.locked #section-screen .back-btn { display: none; }
   position: sticky; top: 0; z-index: 10;
 }
 .progress-info {
-  display: flex; justify-content: space-between;
-  align-items: center; margin-bottom: 8px;
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
 }
 .progress-info span { font-size: 13px; color: var(--sub); font-weight: 600; }
-#study-score-label { color: var(--green) !important; }
-.progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.progress-bar-fill {
-  height: 100%; background: var(--subject-color, var(--accent));
-  border-radius: 2px; transition: width .3s;
-}
+#study-score-label { color: var(--text) !important; }
+.progress-bar { height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--text); border-radius: 2px; transition: width .3s; }
 
 .study-content { padding: 20px; max-width: 640px; margin: 0 auto; width: 100%; }
 .question-card {
   background: var(--surface); border-radius: var(--radius); padding: 28px 24px;
   border: 1px solid var(--border); margin-bottom: 16px;
   min-height: 160px; display: flex; flex-direction: column; justify-content: center;
+  box-shadow: var(--shadow);
 }
 .q-number {
-  font-size: 11px; font-weight: 700; color: var(--subject-color, var(--accent));
-  letter-spacing: .08em; text-transform: uppercase; margin-bottom: 14px;
+  font-size: 10px; font-weight: 700; color: var(--sub);
+  letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px;
 }
 .q-text { font-size: 16px; line-height: 1.8; font-weight: 500; color: var(--text); }
 
 .judge-area { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .judge-btn {
-  padding: 20px; border: 1.5px solid; border-radius: 12px;
+  padding: 20px; border: 1.5px solid var(--border); border-radius: var(--radius);
   font-size: 28px; font-weight: 800; cursor: pointer;
   background: var(--surface); transition: all .15s;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text);
 }
-.judge-btn span { font-size: 12px; font-weight: 600; }
-.judge-btn.correct-btn { border-color: rgba(61,214,140,.25); color: var(--green); }
-.judge-btn.correct-btn:hover { background: rgba(61,214,140,.08); border-color: var(--green); }
-.judge-btn.wrong-btn { border-color: rgba(251,113,133,.25); color: var(--red); }
-.judge-btn.wrong-btn:hover { background: rgba(251,113,133,.08); border-color: var(--red); }
-.judge-btn.answered { pointer-events: none; opacity: 0.28; }
+.judge-btn span { font-size: 12px; font-weight: 600; color: var(--sub); }
+.judge-btn:hover { border-color: var(--text); background: var(--text); color: white; }
+.judge-btn:hover span { color: rgba(255,255,255,.7); }
+.judge-btn.answered { pointer-events: none; opacity: 0.25; }
 .judge-btn.answered.selected { opacity: 1; }
 .judge-btn.correct-answer {
-  background: rgba(61,214,140,.1) !important;
-  border-color: var(--green) !important;
-  color: var(--green) !important; opacity: 1 !important;
+  background: var(--text) !important; border-color: var(--text) !important;
+  color: white !important; opacity: 1 !important;
 }
+.judge-btn.correct-answer span { color: rgba(255,255,255,.7) !important; }
 
 .skip-btn {
-  width: 100%; padding: 12px; border-radius: 10px;
+  width: 100%; padding: 12px; border-radius: var(--radius);
   border: 1px solid var(--border); background: var(--surface);
-  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-size: 13px; font-weight: 600; cursor: pointer;
   color: var(--sub); transition: all .15s; margin-top: 8px;
 }
-.skip-btn:hover { border-color: var(--sub); color: var(--text); }
+.skip-btn:hover { border-color: var(--text); color: var(--text); }
 
 .answer-section { display: none; }
 .answer-section.visible { display: block; }
 
 .result-feedback {
-  font-size: 16px; font-weight: 700; padding: 12px 20px;
-  border-radius: 10px; margin-bottom: 12px; text-align: center;
+  font-size: 15px; font-weight: 700; padding: 12px 20px;
+  border-radius: var(--radius); margin-bottom: 12px; text-align: center;
   display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.result-feedback.hit { background: rgba(61,214,140,.1); color: var(--green); }
-.result-feedback.miss { background: rgba(251,113,133,.1); color: var(--red); }
+.result-feedback.hit { background: var(--text); color: white; }
+.result-feedback.miss { background: var(--surface2); color: var(--sub); border: 1px solid var(--border); }
 
 .answer-badge {
   display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px;
-  border-radius: 30px; font-size: 18px; font-weight: 800; margin-bottom: 14px;
+  border-radius: 30px; font-size: 17px; font-weight: 800; margin-bottom: 14px;
 }
-.answer-badge.correct { background: rgba(61,214,140,.1); color: var(--green); }
-.answer-badge.wrong { background: rgba(251,113,133,.1); color: var(--red); }
+.answer-badge.correct { background: var(--text); color: white; }
+.answer-badge.wrong { background: var(--surface2); color: var(--sub); }
 
 .explanation {
-  background: var(--surface2); border-radius: 10px; padding: 14px 16px;
-  font-size: 14px; line-height: 1.75; color: var(--text); margin-bottom: 14px;
-  border-left: 3px solid var(--subject-color, var(--accent));
+  background: var(--surface2); border-radius: var(--radius); padding: 14px 16px;
+  font-size: 14px; line-height: 1.8; color: var(--text); margin-bottom: 14px;
+  border-left: 3px solid var(--text);
 }
 
 .note-link {
   display: inline-flex; align-items: center; gap: 6px; font-size: 13px;
-  color: var(--accent); text-decoration: none; margin-bottom: 16px;
-  font-weight: 600; opacity: .75; transition: opacity .15s;
+  color: var(--text); text-decoration: none; margin-bottom: 16px;
+  font-weight: 600; opacity: .5; transition: opacity .15s;
 }
 .note-link:hover { opacity: 1; text-decoration: underline; }
 
 .secondary-actions { display: flex; gap: 10px; }
 .bookmark-btn {
-  flex: 1; padding: 12px; border-radius: 10px;
+  flex: 1; padding: 12px; border-radius: var(--radius);
   border: 1px solid var(--border); background: var(--surface);
   font-size: 13px; font-weight: 600; cursor: pointer;
   transition: all .15s; color: var(--sub);
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.bookmark-btn:hover { border-color: #F59E0B; color: #F59E0B; }
-.bookmark-btn.bookmarked { background: rgba(245,158,11,.1); border-color: #F59E0B; color: #F59E0B; }
+.bookmark-btn:hover { border-color: var(--text); color: var(--text); }
+.bookmark-btn.bookmarked { background: var(--text); border-color: var(--text); color: white; }
 
 /* ── Results ── */
 .results-content { padding: 40px 20px; text-align: center; }
@@ -238,40 +218,35 @@ body.locked #section-screen .back-btn { display: none; }
 .score-ring { width: 144px; height: 144px; }
 .results-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
 .results-sub { color: var(--sub); font-size: 14px; margin-bottom: 32px; }
-.results-stats {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px; margin-bottom: 32px;
-}
+.results-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 32px; }
 .rs-card {
-  background: var(--surface); border-radius: 12px;
+  background: var(--surface); border-radius: var(--radius);
   padding: 16px 10px; border: 1px solid var(--border);
 }
 .rs-card .num { font-size: 26px; font-weight: 800; color: var(--text); }
-.rs-card .lbl { font-size: 11px; color: var(--sub); margin-top: 4px; }
-.rs-card.c .num { color: var(--green); }
-.rs-card.w .num { color: var(--red); }
+.rs-card .lbl { font-size: 11px; color: var(--sub); margin-top: 4px; letter-spacing: .04em; }
+.rs-card.c .num { color: var(--text); }
+.rs-card.w .num { color: var(--sub); }
 
 .result-actions { display: flex; flex-direction: column; gap: 10px; }
 .result-btn {
-  padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 700;
-  cursor: pointer; border: none; transition: opacity .15s;
+  padding: 15px; border-radius: var(--radius); font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: opacity .15s;
   display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.result-btn:hover { opacity: .85; }
-.result-btn.primary { background: var(--subject-color, var(--accent)); color: white; }
-.result-btn.secondary {
-  background: var(--surface); border: 1px solid var(--border); color: var(--text);
-}
+.result-btn:hover { opacity: .8; }
+.result-btn.primary { background: var(--text); color: white; border: none; }
+.result-btn.secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
 
 /* ── Empty state ── */
 .empty-state { text-align: center; padding: 60px 20px; color: var(--sub); }
-.empty-icon { margin: 0 auto 16px; display: block; opacity: .35; }
+.empty-icon { margin: 0 auto 16px; display: block; opacity: .25; }
 .empty-state p { font-size: 15px; }
 
 /* ── List view ── */
 .list-items { display: flex; flex-direction: column; gap: 8px; }
 .list-item {
-  background: var(--surface); border-radius: 12px;
+  background: var(--surface); border-radius: var(--radius);
   border: 1px solid var(--border); overflow: hidden;
 }
 .list-item-header {
@@ -296,17 +271,16 @@ body.locked #section-screen .back-btn { display: none; }
   padding: 6px; border-radius: 6px; transition: all .15s;
   flex-shrink: 0; display: flex; align-items: center;
 }
-.reset-btn:hover { color: var(--red); background: rgba(251,113,133,.1); }
+.reset-btn:hover { color: var(--text); background: var(--surface2); }
 
 /* ── Toast ── */
 .toast {
   position: fixed; bottom: 24px; left: 50%;
   transform: translateX(-50%) translateY(80px);
-  background: var(--surface2); color: var(--text);
-  border: 1px solid var(--border); padding: 11px 20px;
-  border-radius: 24px; font-size: 13px; font-weight: 600;
-  transition: transform .3s; z-index: 100; white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(0,0,0,.5);
+  background: var(--text); color: white;
+  padding: 11px 20px; border-radius: 24px;
+  font-size: 13px; font-weight: 600; transition: transform .3s;
+  z-index: 100; white-space: nowrap; box-shadow: var(--shadow);
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 </style>
@@ -326,11 +300,11 @@ body.locked #section-screen .back-btn { display: none; }
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         全問題
       </button>
-      <button class="mode-btn wrong" onclick="showList('wrong')">
+      <button class="mode-btn" onclick="showList('wrong')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
         間違えた問題
       </button>
-      <button class="mode-btn bookmark" onclick="showList('bookmark')">
+      <button class="mode-btn" onclick="showList('bookmark')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
         ブックマーク
       </button>
@@ -376,8 +350,8 @@ body.locked #section-screen .back-btn { display: none; }
       <div class="q-text" id="q-text"></div>
     </div>
     <div class="judge-area" id="choice-area">
-      <button class="judge-btn correct-btn" id="btn-maru" onclick="answerQuestion('○')">○<span>正しい</span></button>
-      <button class="judge-btn wrong-btn"   id="btn-batsu" onclick="answerQuestion('×')">×<span>誤り</span></button>
+      <button class="judge-btn" id="btn-maru" onclick="answerQuestion('○')">○<span>正しい</span></button>
+      <button class="judge-btn" id="btn-batsu" onclick="answerQuestion('×')">×<span>誤り</span></button>
     </div>
     <button class="skip-btn" id="skip-btn" onclick="skipQuestion()">スキップ →</button>
     <div class="answer-section" id="answer-section">
@@ -447,8 +421,8 @@ body.locked #section-screen .back-btn { display: none; }
 //  SVG ICONS
 // ══════════════════════════════════════════════
 const IC = {
-  check: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
-  x: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+  check: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  x: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
   bookmark: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
   bookmarkFill: `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
   list: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
@@ -466,9 +440,7 @@ let HASH_SUBJECT = null;
 function loadProgress() {
   try { PROGRESS = JSON.parse(localStorage.getItem('smProgress') || '{}'); } catch { PROGRESS = {}; }
 }
-function saveProgress() {
-  localStorage.setItem('smProgress', JSON.stringify(PROGRESS));
-}
+function saveProgress() { localStorage.setItem('smProgress', JSON.stringify(PROGRESS)); }
 function getP(id) {
   if (!PROGRESS[id]) PROGRESS[id] = { correct: 0, incorrect: 0, bookmarked: false };
   return PROGRESS[id];
@@ -496,16 +468,16 @@ async function init() {
     document.body.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;
                   font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif;
-                  background:#0C0E1A;color:#5A6288;text-align:center;padding:40px">
+                  background:#F5F5F5;color:#999;text-align:center;padding:40px">
         <div>
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#5A6288"
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#BBBBBB"
                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
                style="display:block;margin:0 auto 20px">
             <rect x="3" y="11" width="18" height="11" rx="2"/>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
-          <h2 style="font-size:18px;font-weight:700;color:#DDE3F8;margin-bottom:10px">アクセスできません</h2>
-          <p style="font-size:14px;line-height:1.6">各科目のURLからアクセスしてください</p>
+          <h2 style="font-size:16px;font-weight:700;color:#111;margin-bottom:10px">アクセスできません</h2>
+          <p style="font-size:13px;line-height:1.7">各科目のURLからアクセスしてください</p>
         </div>
       </div>`;
   }
@@ -522,7 +494,7 @@ function renderHome() {
   const grid = document.getElementById('subject-grid');
   grid.innerHTML = '';
   APP_DATA.subjects.forEach(subj => {
-    const qs = subj.sections.flatMap(s => s.questions);
+    const qs   = subj.sections.flatMap(s => s.questions);
     const done = qs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
     const cor  = qs.filter(q => { const p = PROGRESS[q.id]; return p && p.correct > 0; });
     const acc  = qs.length ? Math.round(cor.length  / qs.length * 100) : 0;
@@ -532,24 +504,23 @@ function renderHome() {
 
     const card = document.createElement('div');
     card.className = 'subject-card';
-    card.style.setProperty('--color', subj.color);
     card.innerHTML = `
       <div class="subject-card-accent"></div>
       <div class="subject-card-body">
         <svg class="progress-ring" viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="${r}" fill="none" stroke="#1E2442" stroke-width="3.5"/>
-          <circle cx="20" cy="20" r="${r}" fill="none" stroke="${subj.color}" stroke-width="3.5"
+          <circle cx="20" cy="20" r="${r}" fill="none" stroke="#E5E5E5" stroke-width="3.5"/>
+          <circle cx="20" cy="20" r="${r}" fill="none" stroke="#111111" stroke-width="3.5"
             stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"
             stroke-linecap="round" transform="rotate(-90 20 20)"/>
-          <text x="20" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="${subj.color}">${pct}%</text>
+          <text x="20" y="24" text-anchor="middle" font-size="9" font-weight="700" fill="#111111">${pct}%</text>
         </svg>
         <div class="info">
           <div class="sname">${subj.name}</div>
           <div class="smeta">${subj.sections.length}セクション · ${qs.length}問</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <div class="sacc" style="color:${subj.color}">正解済 ${acc}%</div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="sacc">正解済 ${acc}%</div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
       </div>`;
     card.onclick = () => showSubject(subj.id);
@@ -567,7 +538,6 @@ function showSubject(subjId) {
   currentSubject = APP_DATA.subjects.find(s => s.id === subjId);
   currentMode = 'all';
   document.getElementById('section-header-title').textContent = currentSubject.name;
-  document.documentElement.style.setProperty('--subject-color', currentSubject.color);
   const subjQs   = currentSubject.sections.flatMap(s => s.questions);
   const subjDone = subjQs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
   document.getElementById('sec-total').textContent = subjQs.length;
@@ -578,9 +548,6 @@ function showSubject(subjId) {
     <button class="study-mode-btn active" onclick="setMode('all',this)">${IC.list} 全問題</button>
     <button class="study-mode-btn" onclick="setMode('wrong',this)">${IC.xCircle} 間違えた問題</button>
     <button class="study-mode-btn" onclick="setMode('bookmark',this)">${IC.bookmark} ブックマーク</button>`;
-  modes.querySelectorAll('.study-mode-btn').forEach(b =>
-    b.style.setProperty('--subject-color', currentSubject.color)
-  );
 
   renderSections();
   showScreen('section-screen');
@@ -615,10 +582,10 @@ function renderSections() {
         <div class="si-title">${sec.title}</div>
         <div class="si-meta">${filtCount > 0 ? filtCount : allQs.length}問${currentMode !== 'all' ? ` (全${allQs.length}問中)` : ''}</div>
       </div>
-      <div class="si-acc" style="color:${currentSubject.color}">${acc}%</div>
+      <div class="si-acc">${acc}%</div>
       <button class="reset-btn" title="このセクションをリセット"
         onclick="event.stopPropagation();resetSection('${sec.id}')">${IC.reset}</button>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--sub)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
     if (filtCount > 0) item.onclick = () => startSection(sec.id);
     list.appendChild(item);
   });
@@ -635,12 +602,10 @@ function filterQuestions(qs) {
 // ══════════════════════════════════════════════
 let session = { questions: [], idx: 0, correct: 0, wrong: 0, noteUrl: '' };
 
-function buildQueue(questions) {
-  return [...questions].sort(() => Math.random() - 0.5);
-}
+function buildQueue(questions) { return [...questions].sort(() => Math.random() - 0.5); }
 
-function startAll()       { startSession(allQuestions(), null); }
-function startWrong()     {
+function startAll()        { startSession(allQuestions(), null); }
+function startWrong()      {
   const qs = allQuestions().filter(q => PROGRESS[q.id]?.incorrect > 0);
   if (!qs.length) { showToast('間違えた問題はまだありません'); return; }
   startSession(qs, null);
@@ -669,9 +634,6 @@ function startSession(questions, noteUrl) {
     idx: 0, correct: 0, wrong: 0,
     noteUrl: noteUrl || findNoteUrl(questions[0].id)
   };
-  if (!document.documentElement.style.getPropertyValue('--subject-color')) {
-    document.documentElement.style.setProperty('--subject-color', 'var(--accent)');
-  }
   showScreen('study-screen');
   renderQuestion();
 }
@@ -695,13 +657,10 @@ function renderQuestion() {
   document.getElementById('q-number').textContent = `Q${session.idx + 1}`;
   document.getElementById('q-text').textContent   = q.q;
 
-  const bm = document.getElementById('btn-maru'), bb = document.getElementById('btn-batsu');
-  bm.className = 'judge-btn correct-btn';
-  bb.className = 'judge-btn wrong-btn';
-
+  document.getElementById('btn-maru').className  = 'judge-btn';
+  document.getElementById('btn-batsu').className = 'judge-btn';
   document.getElementById('answer-section').classList.remove('visible');
   document.getElementById('skip-btn').style.display = 'block';
-
   document.getElementById('note-link').href = session.noteUrl || findNoteUrl(q.id);
   updateBookmarkBtn(q.id);
 }
@@ -739,14 +698,10 @@ function answerQuestion(userAnswer) {
 }
 
 function skipQuestion() { nextQuestion(); }
-
 function nextQuestion() {
   session.idx++;
   if (session.idx >= session.questions.length) showResults();
-  else {
-    session.noteUrl = findNoteUrl(session.questions[session.idx].id);
-    renderQuestion();
-  }
+  else { session.noteUrl = findNoteUrl(session.questions[session.idx].id); renderQuestion(); }
 }
 
 function toggleBookmark() {
@@ -757,7 +712,6 @@ function toggleBookmark() {
   updateBookmarkBtn(q.id);
   showToast(p.bookmarked ? 'ブックマーク追加' : 'ブックマーク解除');
 }
-
 function updateBookmarkBtn(id) {
   const btn = document.getElementById('bookmark-btn');
   const bm  = PROGRESS[id]?.bookmarked;
@@ -779,19 +733,16 @@ function showResults() {
   document.getElementById('result-sub').textContent = `${session.correct}/${total}問正解`;
   document.getElementById('retry-wrong-btn').style.display = session.wrong > 0 ? 'flex' : 'none';
 
-  // Animated score ring
-  const r    = 52, circ = 2 * Math.PI * r;
-  const tgt  = circ * (1 - pct / 100);
-  const col  = document.documentElement.style.getPropertyValue('--subject-color') || '#4F8EFF';
+  const r = 52, circ = 2 * Math.PI * r, tgt = circ * (1 - pct / 100);
   document.getElementById('score-ring-wrap').innerHTML = `
     <svg class="score-ring" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="64" cy="64" r="${r}" fill="none" stroke="#1E2442" stroke-width="8"/>
-      <circle cx="64" cy="64" r="${r}" fill="none" stroke="${col}" stroke-width="8"
+      <circle cx="64" cy="64" r="${r}" fill="none" stroke="#E5E5E5" stroke-width="8"/>
+      <circle cx="64" cy="64" r="${r}" fill="none" stroke="#111111" stroke-width="8"
         stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${circ.toFixed(2)}"
         stroke-linecap="round" transform="rotate(-90 64 64)"
         id="score-arc" style="transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1)"/>
-      <text x="64" y="57" text-anchor="middle" font-size="26" font-weight="800" fill="#DDE3F8">${pct}%</text>
-      <text x="64" y="76" text-anchor="middle" font-size="11" fill="#5A6288">正答率</text>
+      <text x="64" y="57" text-anchor="middle" font-size="26" font-weight="800" fill="#111111">${pct}%</text>
+      <text x="64" y="76" text-anchor="middle" font-size="11" fill="#999999">正答率</text>
     </svg>`;
   requestAnimationFrame(() => requestAnimationFrame(() => {
     const arc = document.getElementById('score-arc');
@@ -821,7 +772,7 @@ function showList(mode) {
     qs = all.filter(q => PROGRESS[q.id]?.bookmarked);
     title = 'ブックマーク'; emptyMsg = 'ブックマークされた問題はまだありません';
   }
-  document.getElementById('list-title').textContent    = title;
+  document.getElementById('list-title').textContent     = title;
   document.getElementById('list-empty-msg').textContent = emptyMsg;
   const container = document.getElementById('list-items');
   const empty     = document.getElementById('list-empty');
@@ -858,9 +809,7 @@ function resetSection(secId) {
   if (!sec) return;
   if (!confirm(`「${sec.title}」の進捗をリセットしますか？`)) return;
   sec.questions.forEach(q => { delete PROGRESS[q.id]; });
-  saveProgress();
-  renderSections();
-  showToast('リセットしました');
+  saveProgress(); renderSections(); showToast('リセットしました');
 }
 
 // ══════════════════════════════════════════════
@@ -890,9 +839,6 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// ══════════════════════════════════════════════
-//  START
-// ══════════════════════════════════════════════
 init();
 </script>
 </body>
