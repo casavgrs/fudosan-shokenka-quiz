@@ -188,11 +188,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
     <div class="app-title">
       <h1>不動産証券化マスター<br>一問一答</h1>
     </div>
-    <div class="stats-bar">
-      <div class="stat-card"><div class="num" id="home-total">—</div><div class="lbl">総問題数</div></div>
-      <div class="stat-card"><div class="num" id="home-done">—</div><div class="lbl">回答済み</div></div>
-      <div class="stat-card"><div class="num" id="home-acc">—</div><div class="lbl">正答率</div></div>
-    </div>
     <div class="mode-buttons">
       <button class="mode-btn" onclick="startAll()">🎯 全問題</button>
       <button class="mode-btn wrong" onclick="showList('wrong')">❌ 間違えた問題</button>
@@ -335,14 +330,6 @@ function allQuestions() {
 }
 
 function renderHome() {
-  const all = allQuestions();
-  const done = all.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
-  const correct = all.filter(q => { const p = PROGRESS[q.id]; return p && p.correct > 0; });
-  document.getElementById('home-total').textContent = all.length;
-  document.getElementById('home-done').textContent = done.length;
-  document.getElementById('home-acc').textContent = done.length
-    ? Math.round(correct.length / done.length * 100) + '%' : '—';
-
   const grid = document.getElementById('subject-grid');
   grid.innerHTML = '';
   APP_DATA.subjects.forEach(subj => {
@@ -368,7 +355,7 @@ function renderHome() {
         <div class="smeta">${subj.sections.length}セクション · ${qs.length}問</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-        <div class="sacc" style="color:${subj.color}">${acc}%正解</div>
+        <div class="sacc" style="color:${subj.color}">正解済 ${acc}%</div>
         <div class="arrow">›</div>
       </div>`;
     card.onclick = () => showSubject(subj.id);
