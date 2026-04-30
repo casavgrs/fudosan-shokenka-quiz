@@ -288,6 +288,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
 // ══════════════════════════════════════════════
 let APP_DATA = null;
 let PROGRESS = {}; // { qId: { correct, incorrect, bookmarked } }
+let HASH_SUBJECT = null; // set when opened via subject-specific URL (e.g. 104u.html)
 
 function loadProgress() {
   try { PROGRESS = JSON.parse(localStorage.getItem('smProgress') || '{}'); } catch { PROGRESS = {}; }
@@ -316,6 +317,7 @@ async function init() {
   const hash = location.hash.replace('#','');
   const subjId = HASH_MAP[hash] || hash;
   if (subjId && APP_DATA.subjects.find(s => s.id === subjId)) {
+    HASH_SUBJECT = subjId;
     showSubject(subjId);
   } else {
     renderHome();
@@ -374,6 +376,9 @@ function showSubject(subjId) {
   currentMode = 'all';
   document.getElementById('section-header-title').textContent = currentSubject.name;
   document.documentElement.style.setProperty('--subject-color', currentSubject.color);
+  // Hide back button when accessed via subject-specific URL
+  const secBackBtn = document.querySelector('#section-screen .back-btn');
+  if (secBackBtn) secBackBtn.style.display = HASH_SUBJECT ? 'none' : '';
 
   // Mode buttons
   const modes = document.getElementById('section-modes');
@@ -678,7 +683,10 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
-function goHome() { showScreen('home'); renderHome(); }
+function goHome() {
+  if (HASH_SUBJECT) { showSubject(HASH_SUBJECT); }
+  else { showScreen('home'); renderHome(); }
+}
 function exitStudy() {
   if (session.idx > 0 && confirm('学習を中断しますか？')) goHome();
   else if (session.idx === 0) goHome();
