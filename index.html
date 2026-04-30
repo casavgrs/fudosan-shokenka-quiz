@@ -22,6 +22,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
 .header h1 { font-size: 17px; font-weight: 700; }
 .back-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--sub);
             padding: 4px 8px 4px 0; }
+body.locked #section-screen .back-btn { display: none; }
 .content { flex: 1; padding: 20px; max-width: 640px; margin: 0 auto; width: 100%; }
 
 /* ── Home ── */
@@ -318,9 +319,19 @@ async function init() {
   const subjId = HASH_MAP[hash] || hash;
   if (subjId && APP_DATA.subjects.find(s => s.id === subjId)) {
     HASH_SUBJECT = subjId;
+    document.body.classList.add('locked');
     showSubject(subjId);
   } else {
-    renderHome();
+    document.body.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;
+                  font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif;
+                  background:#F8FAFC;color:#64748B;text-align:center;padding:40px">
+        <div>
+          <div style="font-size:56px;margin-bottom:20px">🔒</div>
+          <h2 style="font-size:18px;font-weight:700;color:#1E293B;margin-bottom:10px">アクセスできません</h2>
+          <p style="font-size:14px;line-height:1.6">各科目のURLからアクセスしてください</p>
+        </div>
+      </div>`;
   }
 }
 
@@ -376,9 +387,6 @@ function showSubject(subjId) {
   currentMode = 'all';
   document.getElementById('section-header-title').textContent = currentSubject.name;
   document.documentElement.style.setProperty('--subject-color', currentSubject.color);
-  // Hide back button when accessed via subject-specific URL
-  const secBackBtn = document.querySelector('#section-screen .back-btn');
-  if (secBackBtn) secBackBtn.style.display = HASH_SUBJECT ? 'none' : '';
 
   // Mode buttons
   const modes = document.getElementById('section-modes');
