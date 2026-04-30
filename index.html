@@ -206,6 +206,10 @@ body.locked #section-screen .back-btn { display: none; }
     <h1 id="section-header-title">—</h1>
   </div>
   <div class="content">
+    <div class="stats-bar" id="section-stats-bar" style="margin-bottom:16px">
+      <div class="stat-card"><div class="num" id="sec-total">—</div><div class="lbl">総問題数</div></div>
+      <div class="stat-card"><div class="num" id="sec-done">—</div><div class="lbl">回答済み</div></div>
+    </div>
     <div class="study-modes" id="section-modes"></div>
     <div class="section-title">セクション</div>
     <div id="section-list" class="section-list"></div>
@@ -387,6 +391,10 @@ function showSubject(subjId) {
   currentMode = 'all';
   document.getElementById('section-header-title').textContent = currentSubject.name;
   document.documentElement.style.setProperty('--subject-color', currentSubject.color);
+  const subjQs = currentSubject.sections.flatMap(s => s.questions);
+  const subjDone = subjQs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
+  document.getElementById('sec-total').textContent = subjQs.length;
+  document.getElementById('sec-done').textContent = subjDone.length;
 
   // Mode buttons
   const modes = document.getElementById('section-modes');
@@ -409,6 +417,12 @@ function setMode(mode, btn) {
 }
 
 function renderSections() {
+  // Update subject-level stats
+  const subjQs = currentSubject.sections.flatMap(s => s.questions);
+  const subjDone = subjQs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
+  document.getElementById('sec-total').textContent = subjQs.length;
+  document.getElementById('sec-done').textContent = subjDone.length;
+
   const list = document.getElementById('section-list');
   list.innerHTML = '';
   currentSubject.sections.forEach(sec => {
