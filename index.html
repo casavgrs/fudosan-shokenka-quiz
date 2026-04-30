@@ -95,6 +95,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
 .reveal-btn:hover { opacity: .9; }
 .answer-section { display: none; }
 .answer-section.visible { display: block; }
+.result-feedback { font-size: 18px; font-weight: 800; padding: 12px 20px;
+                   border-radius: 12px; margin-bottom: 12px; text-align: center; }
+.result-feedback.hit  { background: #DCFCE7; color: #16A34A; }
+.result-feedback.miss { background: #FEE2E2; color: #DC2626; }
+.judge-btn.answered { pointer-events: none; opacity: 0.35; }
+.judge-btn.answered.selected { opacity: 1; }
+.judge-btn.correct-answer { background: #DCFCE7 !important; border-color: #16A34A !important; color: #16A34A !important; }
 .answer-badge { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
                 border-radius: 30px; font-size: 20px; font-weight: 800; margin-bottom: 14px; }
 .answer-badge.correct { background: #DCFCE7; color: #16A34A; }
@@ -205,20 +212,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic Pro
       <div class="q-number" id="q-number">Q1</div>
       <div class="q-text" id="q-text"></div>
     </div>
-    <button class="reveal-btn" id="reveal-btn" onclick="revealAnswer()">答えを見る</button>
+    <div class="judge-area" id="choice-area">
+      <button class="judge-btn correct-btn" id="btn-maru" onclick="answerQuestion('○')">○<span>正しい</span></button>
+      <button class="judge-btn wrong-btn"   id="btn-batsu" onclick="answerQuestion('×')">×<span>誤り</span></button>
+    </div>
+    <button class="skip-btn" id="skip-btn" style="width:100%;margin-top:8px" onclick="skipQuestion()">スキップ →</button>
     <div class="answer-section" id="answer-section">
+      <div id="result-feedback" class="result-feedback"></div>
       <div id="answer-badge" class="answer-badge"></div>
       <div id="explanation" class="explanation" style="display:none"></div>
       <a id="note-link" class="note-link" href="#" target="_blank" rel="noopener">
         📝 noteで詳しく読む ↗
       </a>
-      <div class="judge-area">
-        <button class="judge-btn correct-btn" onclick="judge(true)">○<span>正解</span></button>
-        <button class="judge-btn wrong-btn" onclick="judge(false)">×<span>不正解</span></button>
-      </div>
       <div class="secondary-actions">
         <button class="bookmark-btn" id="bookmark-btn" onclick="toggleBookmark()">🔖 ブックマーク</button>
-        <button class="skip-btn" onclick="nextQuestion()">スキップ →</button>
+        <button class="skip-btn" onclick="nextQuestion()">次の問題 →</button>
       </div>
     </div>
   </div>
@@ -464,9 +472,14 @@ function renderQuestion() {
   document.getElementById('q-number').textContent = `Q${session.idx+1}`;
   document.getElementById('q-text').textContent = q.q;
 
+  // Reset choice buttons
+  const bm = document.getElementById('btn-maru'), bb = document.getElementById('btn-batsu');
+  bm.className = 'judge-btn correct-btn';
+  bb.className = 'judge-btn wrong-btn';
+
   // Reset answer area
-  document.getElementById('reveal-btn').style.display = 'block';
   document.getElementById('answer-section').classList.remove('visible');
+  document.getElementById('skip-btn').style.display = 'block';
 
   // Note URL
   const noteUrl = session.noteUrl || findNoteUrl(q.id);
@@ -476,33 +489,48 @@ function renderQuestion() {
   updateBookmarkBtn(q.id);
 }
 
-function revealAnswer() {
+function answerQuestion(userAnswer) {
   const q = session.questions[session.idx];
-  document.getElementById('reveal-btn').style.display = 'none';
-  document.getElementById('answer-section').classList.add('visible');
+  const isCorrect = userAnswer === q.a;
+
+  // Record result
+  const p = getP(q.id);
+  if (isCorrect) { p.correct++; session.correct++; }
+  else { p.incorrect++; session.wrong++; }
+  saveProgress();
+
+  // Disable buttons + highlight selection and correct answer
+  const bm = document.getElementById('btn-maru'), bb = document.getElementById('btn-batsu');
+  bm.classList.add('answered'); bb.classList.add('answered');
+  (userAnswer === '○' ? bm : bb).classList.add('selected');
+  (q.a === '○' ? bm : bb).classList.add('correct-answer');
+
+  // Hide skip
+  document.getElementById('skip-btn').style.display = 'none';
+
+  // Result feedback
+  const fb = document.getElementById('result-feedback');
+  fb.className = 'result-feedback ' + (isCorrect ? 'hit' : 'miss');
+  fb.textContent = isCorrect ? '✅ 正解！' : '❌ 不正解';
 
   // Answer badge
   const badge = document.getElementById('answer-badge');
-  if (q.a === '○') {
-    badge.className = 'answer-badge correct'; badge.textContent = '○ 正しい';
-  } else if (q.a === '×') {
-    badge.className = 'answer-badge wrong'; badge.textContent = '× 誤り';
-  } else {
-    badge.className = 'answer-badge'; badge.textContent = q.a;
-  }
+  if (q.a === '○') { badge.className = 'answer-badge correct'; badge.textContent = '○ 正しい'; }
+  else             { badge.className = 'answer-badge wrong';   badge.textContent = '× 誤り'; }
 
   // Explanation
   const expEl = document.getElementById('explanation');
   if (q.exp) { expEl.textContent = q.exp; expEl.style.display = 'block'; }
   else { expEl.style.display = 'none'; }
+
+  // Update score
+  document.getElementById('study-score-label').textContent = `○ ${session.correct}`;
+
+  // Show answer section
+  document.getElementById('answer-section').classList.add('visible');
 }
 
-function judge(isCorrect) {
-  const q = session.questions[session.idx];
-  const p = getP(q.id);
-  if (isCorrect) { p.correct++; session.correct++; }
-  else { p.incorrect++; session.wrong++; }
-  saveProgress();
+function skipQuestion() {
   nextQuestion();
 }
 
