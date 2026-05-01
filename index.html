@@ -576,7 +576,7 @@ let currentMode = 'all';
 function showSubject(subjId) {
   currentSubject = APP_DATA.subjects.find(s => s.id === subjId);
   currentMode = 'all';
-  document.getElementById('section-header-title').textContent = `科目${currentSubject.id}　${currentSubject.name}`;
+  document.getElementById('section-header-title').textContent = `${currentSubject.id}　${currentSubject.name}`;
   const subjQs   = currentSubject.sections.flatMap(s => s.questions);
   const subjDone = subjQs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
   document.getElementById('sec-total').textContent = subjQs.length;
