@@ -26,7 +26,7 @@ body {
 .screen { display: none; min-height: 100vh; }
 .screen.active { display: flex; flex-direction: column; }
 .header {
-  padding: 14px 20px;
+  padding: 12px 20px;
   background: rgba(255,255,255,0.88);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -35,6 +35,9 @@ body {
   position: sticky; top: 0; z-index: 10;
 }
 .header h1 { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
+.header-title-group { flex: 1; min-width: 0; }
+.header-title-group h1 { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -.01em; line-height: 1.3; }
+.header-credit { font-size: 10px; color: var(--sub); letter-spacing: .03em; margin-top: 2px; }
 .back-btn {
   background: none; border: none; cursor: pointer; color: var(--accent);
   padding: 4px 8px 4px 0; display: flex; align-items: center;
@@ -346,7 +349,10 @@ body.locked #section-screen .back-btn { display: none; }
 <div id="section-screen" class="screen">
   <div class="header">
     <button class="back-btn" onclick="goHome()">‹</button>
-    <h1 id="section-header-title">—</h1>
+    <div class="header-title-group">
+      <h1 id="section-header-title">—</h1>
+      <p class="header-credit">不動産証券化マスター試験研究会</p>
+    </div>
   </div>
   <div class="content">
     <div class="stats-bar" id="section-stats-bar" style="margin-bottom:16px">
@@ -570,7 +576,7 @@ let currentMode = 'all';
 function showSubject(subjId) {
   currentSubject = APP_DATA.subjects.find(s => s.id === subjId);
   currentMode = 'all';
-  document.getElementById('section-header-title').textContent = currentSubject.name;
+  document.getElementById('section-header-title').textContent = `科目${currentSubject.id}　${currentSubject.name}`;
   const subjQs   = currentSubject.sections.flatMap(s => s.questions);
   const subjDone = subjQs.filter(q => { const p = PROGRESS[q.id]; return p && (p.correct + p.incorrect) > 0; });
   document.getElementById('sec-total').textContent = subjQs.length;
